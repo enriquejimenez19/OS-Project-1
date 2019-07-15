@@ -13,6 +13,8 @@
 #include <signal.h>
 #include <time.h>
 
+#define CLIENTS 1
+
 Node_t *head;
 
 int handle_command(char *, char *, int len);
@@ -50,10 +52,21 @@ int handle_command(char *command, char *response, int len) {
 }
 
 int main(int argc, char *argv[]) {
+	pthread_t thread_clients[CLIENTS];
+	int i;
+
 	if (argc != 1) {
 		fprintf(stderr, "Usage: server\n");
 		exit(1);
 	}
-	RunClient();
+	for(i = 0; i < CLIENTS; i++)
+	{
+		//RunClient();
+		pthread_create(&thread_clients[i], NULL, *RunClient, NULL);
+	}
+	for(i = 0; i < CLIENTS; i++)
+	{
+		pthread_join(thread_clients[i], NULL);
+	}
 	return(0);
 }

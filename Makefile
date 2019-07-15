@@ -1,5 +1,5 @@
 cc = gcc
-ccflags = -g -I.
+ccflags = -g -I. -pthread
 
 all:	server
 
