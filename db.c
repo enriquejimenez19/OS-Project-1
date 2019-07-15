@@ -50,6 +50,19 @@ void query(char *name, char *result, int len) {
 	}
 }
 
+int update(char *name, char *value) {
+	Node_t *target;
+	target = search(name, head, 0);
+	if (target == 0) {
+		return 0;
+	} else {
+		strcpy(target->value,value);
+		//printf("%s \n", target->value);
+		return 1;
+	}
+}
+
+
 int add(char *name, char *value) {
 	Node_t *parent;
 	Node_t *target;
@@ -222,7 +235,21 @@ void interpret_command(char *command, char *response, int len) {
 			return;
 
 		break;
-
+	case 'u':
+		// Add to the database
+		sscanf(&command[1], "%255s %255s", name, value);
+		if ((strlen(name) == 0) || (strlen(value) == 0)) {
+			strncpy(response, "ill-formed command", len-1);
+			return;
+		}
+		if (update(name, value)) {
+			strncpy(response, "updated", len-1);
+			return;
+		} else {
+			strncpy(response, "not in database", len-1);
+			return;
+		}
+		break;
 	case 'a':
 		// Add to the database
 		sscanf(&command[1], "%255s %255s", name, value);
